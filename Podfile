@@ -1,12 +1,15 @@
-source 'https://github.com/CocoaPods/Specs.git'
+source 'https://cdn.cocoapods.org'
 use_frameworks!
+inhibit_all_warnings!
 
 workspace 'IGListKit'
 
 target 'IGListKitTests' do
-    pod 'OCMock', '~> 3.0'
+    platform :ios, '9.0'
+    pod 'OCMock', '~> 3.8.1'
 end
 
 target 'IGListKit-tvOSTests' do
-    pod 'OCMock', '~> 3.0'
+    platform :tvos, '10.0'
+    pod 'OCMock', '~> 3.8.1'
 end

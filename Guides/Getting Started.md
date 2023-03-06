@@ -10,7 +10,7 @@ After installing `IGListKit`, creating a new list is easy.
 
 Creating a new section controller is simple. Subclass `IGListSectionController` and override at least `cellForItemAtIndex:` and `sizeForItemAtIndex:`.
 
-Take a look at [LabelSectionController](https://raw.githubusercontent.com/Instagram/IGListKit/master/Examples/Examples-iOS/IGListKitExamples/SectionControllers/LabelSectionController.swift) for an example section controller that handles a `String` and configures a single cell with a `UILabel`.
+Take a look at [LabelSectionController](https://raw.githubusercontent.com/Instagram/IGListKit/main/Examples/Examples-iOS/IGListKitExamples/SectionControllers/LabelSectionController.swift) for an example section controller that handles a `String` and configures a single cell with a `UILabel`.
 
 ```swift
 class LabelSectionController: ListSectionController {
@@ -62,6 +62,12 @@ func emptyView(for listAdapter: ListAdapter) -> UIView? {
 }
 ```
 
+After you have created the data source you need to connect it to the `IGListAdapter` by setting its `dataSource` property:
+
+```swift
+adapter.dataSource = self
+```
+
 You can return an array of _any_ type of data, as long as it conforms to `IGListDiffable`.
 
 ### Immutability
@@ -73,6 +79,8 @@ The data should be immutable. If you return mutable objects that you will be edi
 `IGListKit` uses an algorithm adapted from a paper titled [A technique for isolating differences between files](http://dl.acm.org/citation.cfm?id=359467&dl=ACM&coll=DL) by Paul Heckel. This algorithm uses a technique known as the *longest common subsequence* to find a minimal diff between collections in linear time `O(n)`. It finds all **inserts**, **deletes**, **updates**, and **moves** between arrays of data.
 
 To add custom, diffable models, you need to conform to the `IGListDiffable` protocol and implement `diffIdentifier()` and `isEqual(toDiffableObject:)`.
+
+> **Note:** an object's `diffIdentifier()` should never change. If an object mutates it's `diffIdentifer()` the behavior of IGListKit is undefined (and almost assuredly undesirable).
 
 For an example, consider the following model:
 
@@ -103,7 +111,7 @@ Both `shayne` and `ann` represent the same *unique* data because they share the 
 To represent this in `IGListKit`'s diffing, add and implement the `IGListDiffable` protocol:
 
 ```swift
-extension User: IGListDiffable {
+extension User: ListDiffable {
   func diffIdentifier() -> NSObjectProtocol {
     return primaryKey
   }
@@ -145,7 +153,7 @@ let adapter = ListAdapter(updater: ListAdapterUpdater(),
                  workingRangeSize: 1) // 1 before/after visible objects
 ```
 
-![working-range](https://raw.githubusercontent.com/Instagram/IGListKit/master/Resources/workingrange.png)
+![working-range](https://raw.githubusercontent.com/Instagram/IGListKit/main/Resources/workingrange.png)
 
 You can set the weak `workingRangeDelegate` on a section controller to receive events.
 
